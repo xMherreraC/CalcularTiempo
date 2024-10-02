@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcular Fechas de Servicio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Calculadora de Tiempo de Servicio</h2>
+
+        <label for="startDate">Fecha Inicial:</label>
+        <input type="date" id="startDate">
+
+        <label for="endDate">Fecha Final:</label>
+        <input type="date" id="endDate">
+
+        <button onclick="calculateMonthsAndDays()">Calcular Meses y Días</button>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function calculateMonthsAndDays() {
+            // Obtener las fechas de los inputs
+            var startDate = new Date(document.getElementById("startDate").value);
+            var endDate = new Date(document.getElementById("endDate").value);
+
+            // Verificar si las fechas son válidas
+            if (isNaN(startDate) || isNaN(endDate)) {
+                document.getElementById("result").innerHTML = "Por favor, ingrese fechas válidas.";
+                return;
+            }
+
+            // Verificar si la fecha final es mayor que la inicial
+            if (endDate < startDate) {
+                document.getElementById("result").innerHTML = "La fecha final debe ser mayor o igual a la fecha inicial.";
+                return;
+            }
+
+            // Cálculo de los meses
+            var yearsDifference = endDate.getFullYear() - startDate.getFullYear();
+            var monthsDifference = endDate.getMonth() - startDate.getMonth();
+            var totalMonths = (yearsDifference * 12) + monthsDifference;
+
+            // Ajustar si el día de la fecha final es menor que el de la fecha inicial
+            if (endDate.getDate() < startDate.getDate()) {
+                totalMonths--;
+            }
+
+            // Cálculo de los días restantes
+            var startDayAdjusted = new Date(endDate.getFullYear(), endDate.getMonth(), startDate.getDate());
+            var daysDifference = (endDate - startDayAdjusted) / (1000 * 3600 * 24);
+
+            if (daysDifference < 0) {
+                var previousMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 0);
+                daysDifference = (endDate - previousMonth) / (1000 * 3600 * 24);
+            }
+
+            // Mostrar el resultado
+            document.getElementById("result").innerHTML = "Han pasado " + totalMonths + " meses y " + Math.round(daysDifference) + " días.";
+        }
+    </script>
+
+</body>
+</html>
